@@ -1,6 +1,7 @@
 const Hapi = require("@hapi/hapi");
 const routes = require("./config/routes");
 const config = require('./config/envs-config');
+const sequelize = require('./config/database'); 
 
 
 const server = Hapi.server({
