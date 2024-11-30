@@ -20,6 +20,22 @@ const routes = [
       validate: produtoSchema.consultaPorId,
     },
   },
+  {
+    method: "POST",
+    path: `${baseVersion}/produtos`,
+    options: {
+        handler: produtoController.createProduto,
+        validate: produtoSchema.createProduto,
+    },
+},
+{
+    method: "PUT",
+    path: `${baseVersion}/produtos/{id}`,
+    options: {
+        handler: produtoController.updateProduto,
+        validate: produtoSchema.updateProduto,
+    },
+},
 ];
 
 module.exports = routes;
