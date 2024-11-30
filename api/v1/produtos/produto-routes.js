@@ -36,6 +36,14 @@ const routes = [
         validate: produtoSchema.updateProduto,
     },
 },
+{
+  method: "DELETE",
+  path: `${baseVersion}/produtos/{id}`,
+  options: {
+      handler: produtoController.deleteProduto,
+      validate: produtoSchema.consultaPorId,
+  },
+},
 ];
 
 module.exports = routes;

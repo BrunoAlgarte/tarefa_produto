@@ -16,6 +16,15 @@ const update = async (id, novoProduto) => {
     return null;
 };
 
+const remove = async (id) => {
+    const index = listaProdutos.findIndex((produto) => produto.id == id);
+    if (index !== -1) {
+        listaProdutos.splice(index, 1);
+        return true;
+    }
+    return false;
+};
+
 const list = async (filters) => {
     let resultado = listaProdutos;
 
@@ -38,4 +47,4 @@ const findById = async (id) => {
     return listaProdutos.find((produto) => produto.id == id);
 };
 
-module.exports = { list, findById, save, update, };
+module.exports = { list, findById, save, update, remove };

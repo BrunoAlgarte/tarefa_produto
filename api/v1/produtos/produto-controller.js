@@ -28,9 +28,19 @@ const updateProduto = async (request, h) => {
     return h.response({ error: "Produto não encontrado." }).code(404);
 };
 
+const deleteProduto = async (request, h) => {
+    const id = request.params.id;
+    const result = await produtoBusiness.remove(id);
+    if (result) {
+        return h.response({ message: "Produto removido com sucesso." }).code(200);
+    }
+    return h.response({ error: "Produto não encontrado." }).code(404);
+};
+
 module.exports = {
     getProdutos,
     getProdutoPorId,
     createProduto,
     updateProduto,
+    deleteProduto,
 };
