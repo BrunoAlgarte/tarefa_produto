@@ -1,50 +1,75 @@
 const Produto = require('./produto-model');
-const listaProdutos = [];
+
 
 const save = async (produto) => {
-    produto.id = Math.floor((Math.random() * 1000)); 
-    listaProdutos.push(produto);
-    return produto;
+    try {
+        const novoProduto = await Produto.create(produto); 
+        return novoProduto;
+    } catch (error) {
+        console.error('Erro ao salvar produto:', error);
+        throw error;
+    }
 };
+
 
 const update = async (id, novoProduto) => {
-    const index = listaProdutos.findIndex((produto) => produto.id == id);
-    if (index !== -1) {
-        listaProdutos[index] = { ...listaProdutos[index], ...novoProduto };
-        return listaProdutos[index];
+    try {
+        const produto = await Produto.findByPk(id); 
+        if (!produto) return null;
+
+        await produto.update(novoProduto); 
+        return produto;
+    } catch (error) {
+        console.error('Erro ao atualizar produto:', error);
+        throw error;
     }
-    return null;
 };
+
 
 const remove = async (id) => {
-    const index = listaProdutos.findIndex((produto) => produto.id == id);
-    if (index !== -1) {
-        listaProdutos.splice(index, 1);
+    try {
+        const produto = await Produto.findByPk(id); 
+        if (!produto) return false;
+
+        await produto.destroy();
         return true;
+    } catch (error) {
+        console.error('Erro ao remover produto:', error);
+        throw error;
     }
-    return false;
 };
+
 
 const list = async (filters) => {
-    let resultado = listaProdutos;
+    try {
+        const where = {}; 
+        if (filters.nome) {
+            where.nome = {
+                [require('sequelize').Op.iLike]: `%${filters.nome}%` 
+            };
+        }
 
-    if (filters.nome) {
-        resultado = resultado.filter((produto) =>
-            produto.nome.toLowerCase().includes(filters.nome.toLowerCase())
-        );
+        if (filters.categoria) {
+            where.categoria = filters.categoria; 
+        }
+
+        const produtos = await Produto.findAll({ where }); 
+        return produtos;
+    } catch (error) {
+        console.error('Erro ao listar produtos:', error);
+        throw error;
     }
-
-    if (filters.categoria) {
-        resultado = resultado.filter(
-            (produto) => produto.categoria === filters.categoria
-        );
-    }
-
-    return resultado;
 };
 
+
 const findById = async (id) => {
-    return listaProdutos.find((produto) => produto.id == id);
+    try {
+        const produto = await Produto.findByPk(id); 
+        return produto;
+    } catch (error) {
+        console.error('Erro ao buscar produto por ID:', error);
+        throw error;
+    }
 };
 
 module.exports = { list, findById, save, update, remove };

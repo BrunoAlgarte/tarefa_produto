@@ -1,96 +1,62 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../../config/database");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../../config/database');
 
-const Produto = sequelize.define(
-  "Produto",
-  {
+const Produto = sequelize.define('Produto', {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
     },
     nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     descricao: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.TEXT,
+        allowNull: false,
     },
     categoria: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     marca: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     preco: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
+        type: DataTypes.FLOAT,
+        allowNull: false,
     },
     quantidadeEstoque: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     codigoBarras: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        len: [13, 13],
-      },
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
     },
     dimensoes: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      validate: {
-        isValidDimensoes(value) {
-          if (
-            !value.altura ||
-            !value.largura ||
-            !value.profundidade ||
-            !value.unidadeMedida
-          ) {
-            throw new Error("Dimensões inválidas!");
-          }
-        },
-      },
+        type: DataTypes.JSONB,
+        allowNull: false,
     },
     peso: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      validate: {
-        isValidPeso(value) {
-          if (!value.valor || !value.unidadeMedida) {
-            throw new Error("Peso inválido!");
-          }
-        },
-      },
+        type: DataTypes.JSONB,
+        allowNull: false,
     },
     status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "ativo",
-      validate: {
-        isIn: [["ativo", "inativo"]],
-      },
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'ativo',
     },
     dataCadastro: {
-      type: DataTypes.DATE,
-      allowNull: false,
+        type: DataTypes.DATE,
+        allowNull: false,
     },
-  },
-  {
-    tableName: "produtos",
+}, {
+    tableName: 'produtos',
     timestamps: false,
-  }
-);
+});
 
 module.exports = Produto;
+

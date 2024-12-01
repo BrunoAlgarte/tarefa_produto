@@ -2,13 +2,13 @@ openapi: 3.0.3
 
 info:
   title: API de Produtos
-  description: Produtos de Venda da Empresa X
-  termsOfService: http//swager.io/terms
+  description: API para gerenciar produtos da empresa X.
+  termsOfService: http://swagger.io/terms
   contact:
     email: fatec@fatecfranca.edu.br
   license:
     name: Apache 2.0
-    url: http//swager.io/terms
+    url: http://swagger.io/terms
   version: 1.0.0
 
 servers:
@@ -18,7 +18,7 @@ servers:
 paths:
   /produtos:
     post:
-      summary: Cadastra novos produtos
+      summary: Cadastrar um novo produto
       requestBody:
         required: true
         content:
@@ -27,76 +27,185 @@ paths:
               $ref: "#/components/schemas/ProdutoRequest"
       responses:
         '201':
-          description: Sucesso cadastro produto
+          description: Produto cadastrado com sucesso
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProdutoResponse"
-                
-                
+    get:
+      summary: Listar produtos com filtros
+      parameters:
+        - name: nome
+          in: query
+          schema:
+            type: string
+          description: Filtrar produtos pelo nome
+        - name: categoria
+          in: query
+          schema:
+            type: string
+          description: Filtrar produtos pela categoria
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProdutoResponse"
+
+  /produtos/{id}:
+    get:
+      summary: Obter produto por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do produto
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProdutoResponse"
+        '404':
+          description: Produto não encontrado
+    put:
+      summary: Atualizar um produto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProdutoRequest"
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProdutoResponse"
+        '404':
+          description: Produto não encontrado
+    delete:
+      summary: Remover um produto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do produto
+      responses:
+        '204':
+          description: Produto removido com sucesso
+        '404':
+          description: Produto não encontrado
+
 components:
   schemas:
-    
     ProdutoRequest:
       type: object
       properties:
+        nome:
+          type: string
+          description: Nome do produto
+          example: Smartphone Galaxy S21
         descricao:
           type: string
-          description: Descricao do produto
-          example: Geladeira
-          maxLength: 100
-          minLength: 5
-        preco: 
+          description: Descrição do produto
+          example: Smartphone Samsung Galaxy S21 com 128GB de armazenamento.
+        categoria:
+          type: string
+          description: Categoria do produto
+          example: Eletrônicos
+        marca:
+          type: string
+          description: Marca do produto
+          example: Samsung
+        preco:
+          type: number
+          format: float
+          description: Preço do produto
+          example: 4999.99
+        quantidadeEstoque:
+          type: integer
+          description: Quantidade em estoque
+          example: 30
+        codigoBarras:
+          type: string
+          description: Código de barras do produto
+          example: 7896541239870
+        dimensoes:
           type: object
           properties:
-            custo:
+            altura:
               type: number
-              format: decimal
-              example: 19.99
-              description: Preço custo produto
-            venda:
+              description: Altura do produto
+              example: 15.1
+            largura:
               type: number
-              format: decimal
-              example: 25.87
-              description: Preco de venda consumidor
-        categorias:
-          type: array
-          items:
-            type: string
-          example: ["A", "B"]
+              description: Largura do produto
+              example: 7.1
+            profundidade:
+              type: number
+              description: Profundidade do produto
+              example: 0.8
+            unidadeMedida:
+              type: string
+              description: Unidade de medida das dimensões
+              example: cm
+        peso:
+          type: object
+          properties:
+            valor:
+              type: number
+              description: Peso do produto
+              example: 0.17
+            unidadeMedida:
+              type: string
+              description: Unidade de medida do peso
+              example: kg
+        status:
+          type: string
+          description: Status do produto
+          example: ativo
+        dataCadastro:
+          type: string
+          format: date-time
+          description: Data de cadastro do produto
+          example: 2024-11-30T12:00:00Z
       required:
+        - nome
         - descricao
-        - categorias
+        - categoria
+        - marca
         - preco
+        - quantidadeEstoque
+        - codigoBarras
+        - dimensoes
+        - peso
+        - status
+        - dataCadastro
 
     ProdutoResponse:
       type: object
-      properties:
-        id:
-          type: integer
-          example: 29394
-        descricao:
-          type: string
-          description: Descricao do produto
-          example: Geladeira
-          maxLength: 100
-          minLength: 5
-        preco: 
-          type: object
+      allOf:
+        - $ref: "#/components/schemas/ProdutoRequest"
+        - type: object
           properties:
-            custo:
-              type: number
-              format: decimal
-              example: 19.99
-              description: Preço custo produto
-            venda:
-              type: number
-              format: decimal
-              example: 25.87
-              description: Preco de venda consumidor
-        categorias:
-          type: array
-          items:
-            type: string
-          example: ["A", "B"]
-    
+            id:
+              type: integer
+              description: ID do produto
+              example: 1

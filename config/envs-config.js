@@ -2,8 +2,7 @@
 
 const dotenv = require('dotenv').config();
 
-// All configurations will extend these options
-// ============================================
+
 const all = {
     basePath: '/cms/v1',
 
